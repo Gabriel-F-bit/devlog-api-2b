@@ -9,12 +9,12 @@ let projects = [
 ]; 
 
 // GET /api/v1/projects — listar todos
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.json({ projects, total: projects.length });
 });
 
 // POST /api/v1/projects — criar
-app.post('/', (req, res) => {
+router.post('/', (req, res) => {
     const { title, description } = req.body;
     if (!title){
          return res.status(400).json({ error: 'title é obrigatório' });
@@ -30,7 +30,7 @@ app.post('/', (req, res) => {
 });
 
 // GET /api/v1/projects/:id — buscar por ID
-app.get('/:id', (req, res) => {
+router.get('/:id', (req, res) => {
     const {id} = req.params;
     const project = projects.find(item => item.id === parseInt(id));
     if (!project) {
@@ -40,7 +40,7 @@ app.get('/:id', (req, res) => {
 });
 
 // PATCH /api/v1/projects/:id — atualizar
-app.patch('/:id', (req, res) => {
+router.patch('/:id', (req, res) => {
     const{id} = req.params;
     const index = projects.findIndex(p => p.id === parseInt(id));
     if (index === -1) {
@@ -51,7 +51,7 @@ app.patch('/:id', (req, res) => {
 });
 
 // DELETE /api/v1/projects/:id — remover
-app.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     const{id} = req.params;
     const index = projects.findIndex(p => p.id === parseInt(id));
     if (index === -1){
