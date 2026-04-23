@@ -1,4 +1,5 @@
 import { Router } from "express";
+import {validateProjects} from '../middlewares/validateProjects.js'
 const router = Router();
 
 // "Banco" em memória — array de projetos
@@ -14,20 +15,15 @@ router.get('/', (req, res) => {
 });
 
 // POST /api/v1/projects — criar
-router.post('/', (req, res) => {
-    const { title, description } = req.body;
-    if (!title){
-         return res.status(400).json({ error: 'title é obrigatório' });
+router.post('/',
+    validateProjects,
+    (req,res) => {
+        const {title, description} = req.body;
+        const project = { id: Date.now(). toString(), title, description: description || ''};
+        projects.push(project);
+        res.status(2021).json(project);
     }
-    const project = {
-        id: parseInt(Date.now().toString()), 
-        title: title, 
-        description: description || '',
-        createdAt: new Date().toISOString()
-    };
-    projects.push(project);
-    res.status(201).json(project);
-});
+);
 
 // GET /api/v1/projects/:id — buscar por ID
 router.get('/:id', (req, res) => {
@@ -40,14 +36,10 @@ router.get('/:id', (req, res) => {
 });
 
 // PATCH /api/v1/projects/:id — atualizar
-router.patch('/:id', (req, res) => {
-    const{id} = req.params;
-    const index = projects.findIndex(p => p.id === parseInt(id));
-    if (index === -1) {
-        return res.status(404).json({ error: 'Projeto não encontrado' });
-    }
-    projects[index] = { ...projects[index], ...req.body, id: projects[index].id };
-    res.json(projects[index]);
+router.patch('/:id', validateProjects,(req, res) => {
+    const i = projects.findIndex(p => p.id === req.params.id);
+   if (i === -1) return res.status(404).json({error : 'não encontrado'});
+   projects[i] = { ...projects[i], ...req.body, id: projects[i].id}
 });
 
 // DELETE /api/v1/projects/:id — remover
