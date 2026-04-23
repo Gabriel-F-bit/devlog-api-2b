@@ -12,13 +12,16 @@
 
 import projectRoutes from './routes/projectsRoutes.js'
 import express from 'express';
+import morgan from 'morgan';
 const app = express(); //cria instacia do express
 app.use(express.json()); //lida com o formato json
+app.use(morgan('dev'));
 
 const port = 3000;
 
 //Monta o router no prefixo
 app.use('/api/v1/projects', projectRoutes);
+
 
 app.get('/health', (req, res) =>{
     res.json({status: 'OK'});
